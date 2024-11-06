@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Admin Dashboard</title>
+
+    <!-- Open Sans Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../static/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  </head>
+  <body>
+    <div class="grid-container">
+
+      <!-- Header -->
+      <header class="header">
+        <div class="menu-icon" onclick="openSidebar()">
+          <span class="material-icons-outlined">menu</span>
+        </div>
+        <div class="header-left">
+          <span class="material-icons-outlined">search</span>
+        </div>
+        <div class="header-right">
+          <span class="material-icons-outlined">notifications</span>
+          <span class="material-icons-outlined">email</span>
+          <span class="material-icons-outlined">account_circle</span>
+        </div>
+      </header>
+      <!-- End Header -->
+
+      <!-- Sidebar -->
+      <aside id="sidebar" style="background-color: #a10ca3;">
+        <div class="sidebar-title">
+          <div class="sidebar-brand">
+            <img src="/static/InwiLogo2.png" alt="Icon Image" width="150" height="auto">
+          </div>
+          <span class="material-icons-outlined" onclick="closeSidebar()">close</span>
+        </div>
+
+        <ul class="sidebar-list">
+          <li class="sidebar-list-item">
+            <a href="{% url 'home' %}">
+              <span class="material-icons-outlined">dashboard</span> Dashboard
+            </a>
+          </li>
+          <li class="sidebar-list-item">
+            <a href="{% url 'data' %}">
+              <span class="material-icons-outlined">leaderboard</span> Data Overview
+            </a>
+          </li>
+          <li class="sidebar-list-item" style="position: relative;">
+            <a href="#" onclick="showConfirmationPopup(event)">
+              <span class="material-icons-outlined">phone</span> Support
+            </a>
+            <div id="confirmationPopup" class="popup" style="display: none;">
+              <div class="popup-content">
+                <p style="color:rgb(180, 184, 244);">By clicking "Confirm", you will be redirected to the support site.</p>
+                <div class="popup-buttons">
+                  <button class="popup-confirm" onclick="redirectToSupport()">Confirm</button>
+                  <button class="popup-cancel" onclick="closeConfirmationPopup()">Cancel</button>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </aside>
+      <!-- End Sidebar -->
+
+      <!-- Main -->
+      <main class="main-container">
+        <div class="main-title">
+          <h2>Dashboard</h2>
+        </div>
+
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+
+          <!-- Page Heading -->
+          <h5>Sales insights</h5>
+          <p class="mb-4">Below Represents insights on the firm sales in different categories :
+           <br>
+          To illustrate the firm financial situation and urgency on tracking clients and satisfying their needs.</p>
+
+          <!-- Content Row -->
+          <div class="row">
+
+              <div class="col-xl-8 col-lg-7">
+
+                  <!-- Area Chart -->
+                  <div class="card shadow mb-4" style="background-color: rgba(242, 240, 240, 0.581);">
+                      <div class="card-header py-3">
+                          <h6 class="m-0 font-weight-bold text-primary">Revenue in B2B per Month</h6>
+                      </div>
+                      <div class="card-body">
+                          <div class="chart-area">
+                              <canvas id="myAreaChart"></canvas>
+                          </div>
+                          <hr>
+                      </div>
+                  </div>
+
+                  <!-- Bar Chart -->
+                  <div class="card shadow mb-4" style="background-color: rgba(242, 240, 240, 0.581);">
+                      <div class="card-header py-3">
+                          <h6 class="m-0 font-weight-bold text-primary">Revenue in B2C per Month</h6>
+                      </div>
+                      <div class="card-body">
+                          <div class="chart-bar">
+                              <canvas id="myBarChart"></canvas>
+                          </div>
+                          <hr>
+                      </div>
+                  </div>
+
+              </div>
+
+              <!-- Donut Chart -->
+              <div class="col-xl-4 col-lg-5">
+                  <div class="card shadow mb-4" style="background-color: rgba(242, 240, 240, 0.581);">
+                      <!-- Card Header - Dropdown -->
+                      <div class="card-header py-3">
+                          <h6 class="m-0 font-weight-bold text-primary">Income Type</h6>
+                      </div>
+                      <!-- Card Body -->
+                      <div class="card-body">
+                          <div class="chart-pie pt-4">
+                              <canvas id="myPieChart"></canvas>
+                          </div>
+                          <hr>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+      </div>
+      <!-- /.container-fluid -->
+
+      </main>
+      <!-- End Main -->
+
+    </div>
+
+    <!-- Scripts -->
+    <!-- Custom JS -->
+    <script src="../static/scripts.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../static/chart.js/Chart.min.js"></script>
+    <script src="../static/demo/chart-area-demo.js"></script>
+    <script src="../static/demo/chart-bar-demo.js"></script>
+    <script src="../static/demo/chart-pie-demo.js"></script>
+    <script src="../static/chart.js/Chart.min.js"></script>
+
+    <script>
+      function showConfirmationPopup(event) {
+        event.preventDefault();
+        document.getElementById('confirmationPopup').style.display = 'block';
+      }
+    
+      function closeConfirmationPopup() {
+        document.getElementById('confirmationPopup').style.display = 'none';
+      }
+    
+      function redirectToSupport() {
+        window.location.href = 'https://inwi.ma/faq'; 
+      }
+    </script>
+  </body>
+</html>

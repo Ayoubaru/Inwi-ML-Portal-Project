@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Admin Dashboard</title>
+
+    <!-- Open Sans Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../static/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+
+  </head>
+  <body>
+    <div class="grid-container">
+
+      <!-- Header -->
+      <header class="header">
+        <div class="menu-icon" onclick="openSidebar()">
+          <span class="material-icons-outlined">menu</span>
+        </div>
+        <div class="header-left">
+          <span class="material-icons-outlined">search</span>
+        </div>
+        <div class="header-right">
+          <span class="material-icons-outlined">notifications</span>
+          <span class="material-icons-outlined">email</span>
+          <span class="material-icons-outlined">account_circle</span>
+        </div>
+      </header>
+      <!-- End Header -->
+
+      <!-- Sidebar -->
+      <aside id="sidebar" style="background-color: #a10ca3;">
+        <div class="sidebar-title">
+          <div class="sidebar-brand">
+            <img src="/static/InwiLogo2.png" alt="Icon Image" width="150" height="auto">
+          </div>
+          <span class="material-icons-outlined" onclick="closeSidebar()">close</span>
+        </div>
+
+        <ul class="sidebar-list">
+          <li class="sidebar-list-item">
+            <a href="{% url 'home' %}">
+              <span class="material-icons-outlined">dashboard</span> Dashboard
+            </a>
+          </li>
+          <li class="sidebar-list-item">
+            <a href="{% url 'data' %}">
+              <span class="material-icons-outlined">leaderboard</span> Data Overview
+            </a>
+          </li>
+          <li class="sidebar-list-item" style="position: relative;">
+            <a href="#" onclick="showConfirmationPopup(event)">
+              <span class="material-icons-outlined">phone</span> Support
+            </a>
+            <div id="confirmationPopup" class="popup" style="display: none;">
+              <div class="popup-content">
+                <p style="color:rgb(180, 184, 244);">By clicking "Confirm", you will be redirected to the support site.</p>
+                <div class="popup-buttons">
+                  <button class="popup-confirm" onclick="redirectToSupport()">Confirm</button>
+                  <button class="popup-cancel" onclick="closeConfirmationPopup()">Cancel</button>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </aside>
+      <!-- End Sidebar -->
+
+      <!-- Main -->
+      <main class="main-container">
+        <h1 class="h3 mb-2 text-gray-800">Data Overview</h1>
+            <p class="mb-4">Note That this is just a data overview , for more details on our data , please contact the Administrator </p>
+          <style>
+    table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th, td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+
+  th {
+    background-color: #f2f2f2;
+  }
+  
+  .table-container {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+
+  .table-header {
+    background-color: #f2f2f2;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+  .btn-medium {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+        line-height: 1.7;
+        border-radius: 0.2rem;
+    }
+  
+    
+      </style>
+
+<div class="table-container">
+  <div class="table-header">
+    <div class="row">
+      <div class="col">
+          <h2>Client Data Overview</h2>
+      </div>
+      <div class="col-auto">
+          <button type="button" class="btn btn-medium btn-dark" data-bs-toggle="modal" data-bs-target=".bd-example-modal-lg">
+            <i class="bi bi-clipboard-data"></i> &nbsp;   AI Analysis</button>
+      </div>
+  </div>
+  
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Customer Churn Prediction</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body  modal-lg">
+            <div class="row my-3 text-start">
+              <div class="col">
+
+                <form action="{% url 'data' %}" method="POST"  id="prediction-form">
+                  {% csrf_token %}
+
+                  <div class="row">
+                    <div class="alert alert-warning mb-0" role="alert">
+                        <h4 class="alert-heading">Warning!</h4>
+                        <p>This form uses a machine learning model to predict customer churn. Please note the following:</p>
+                        <ul>
+                            <li>The predictions are based on historical data and may not be 100% accurate.</li>
+                            <li>Use the predictions as a reference, and consider other factors before making decisions.</li>
+                            <li>Always exercise caution and rely on expert analysis when dealing with customer churn.</li>
+                        </ul>
+                        <hr>
+                    </div>
+                </div>
+                
+                  <br>
+                  <br>
+    
+                  <div class="row">
+                    <div class="col">
+                      <div class="input-group mb-4">
+                        <div class="input-group-prepend">
+                          <label class="input-group-text" for="inputGroupSelect01">Gender</label>
+                        </div>
+                        <select class="custom-select" id="query4" name="query4">
+                          <option selected>Male</option>
+                          <option >Female</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="col">
+                      <div class="input-group mb-4">
+                       <div class="input-group-prepend">
+                         <label class="input-group-text" for="inputGroupSelect01">SeniorCitizen</label>
+                       </div>
+                       <select class="custom-select" id="query1" name="query1">
+                         <option selected>1</option>
+                         <option >0</option>
+                       </select>
+                     </div>
+                   </div>
+
+                    <div class="col">
+                       <div class="input-group mb-4">
+                        <div class="input-group-prepend">
+                          <label class="input-group-text" for="inputGroupSelect01">Partner</label>
+                        </div>
+                        <select class="custom-select" id="query5" name="query5">
+                          <option selected>Yes</option>
+                          <option >No</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col">
+                       <div class="input-group mb-4">
+                        <div class="input-group-prepend">
+                          <label class="input-group-text" for="inputGroupSelect01">Dependents</label>
+                        </div>
+                        <select class="custom-select" id="query6" name="query6">
+                          <option selected>Yes</option>
+                          <option >No</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+
+                    <div class="col">
+                       <div class="input-group mb-4">
+                        <div class="input-group-prepend">
+                          <label class="input-group-text" for="inputGroupSelect01">Tenure</label>
+                        </div>
+                        <input type="number" style="width: 90px;" class="custom-select" id="query19" name="query19">
+                      </div>
+                    </div>
+
+                    <div class="col">
+                       <div class="input-group mb-4">
+                        <div class="input-group-prepend">
+                          <label class="input-group-text" for="inputGroupSelect01">PhoneService</label>
+                        </div>
+                        <select class="custom-select" id="query7" name="query7">
+                          <option selected>Yes</option>
+                          <option >No</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="col">
+                       <div class="input-group mb-4">
+                        <div class="input-group-prepend">
+                          <label class="input-group-text" for="inputGroupSelect01">MultipleLines</label>
+                        </div>
+                        <select class="custom-select" id="query8" name="query8">
+                          <option selected>Yes</option>
+                          <option >No</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col">
+                       <div class="input-group mb-4">
+                        <div class="input-group-prepend">
+                          <label class="input-group-text" for="inputGroupSelect01">Internet Service</label>
+                        </div>
+                        <select class="custom-select" id="query9" name="query9">
+                          <option selected>DSL</option>
+                          <option >Fiber optic</option>
+                          <option >No</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="col">
+                       <div class="input-group mb-4">
+                        <div class="input-group-prepend">
+                          <label class="input-group-text" for="inputGroupSelect01">Online Security</label>
+                        </div>
+                        <select class="custom-select" id="query10" name="query10">
+                          <option selected>Yes</option>
+                          <option >No</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="col">
+                       <div class="input-group mb-4">
+                        <div class="input-group-prepend">
+                          <label class="input-group-text" for="inputGroupSelect01">Online Backup</label>
+                        </div>
+                        <select class="custom-select" id="query11" name="query11">
+                          <option selected>Yes</option>
+                          <option >No</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col">
+                       <div class="input-group mb-4">
+                        <div class="input-group-prepend">
+                          <label class="input-group-text" for="inputGroupSelect01">Device Protection</label>
+                        </div>
+                        <select class="custom-select" id="query12" name="query12">
+                          <option selected>Yes</option>
+                          <option >No</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="col">
+                       <div class="input-group mb-4">
+                        <div class="input-group-prepend">
+                          <label class="input-group-text" for="inputGroupSelect01">Tech Support</label>
+                        </div>
+                        <select class="custom-select" id="query13" name="query13">
+                          <option selected>Yes</option>
+                          <option >No</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="col">
+                       <div class="input-group mb-4">
+                        <div class="input-group-prepend">
+                          <label class="input-group-text" for="inputGroupSelect01">Streaming TV</label>
+                        </div>
+                        <select class="custom-select" id="query14" name="query14">
+                          <option selected>Yes</option>
+                          <option>No</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col">
+                       <div class="input-group mb-4">
+                        <div class="input-group-prepend">
+                          <label class="input-group-text" for="inputGroupSelect01">Streaming Movies</label>
+                        </div>
+                        <select class="custom-select" id="query15" name="query15">
+                          <option selected>Yes</option>
+                          <option>No</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="col">
+                       <div class="input-group mb-4">
+                        <div class="input-group-prepend">
+                          <label class="input-group-text" for="inputGroupSelect01">Contract</label>
+                        </div>
+                        <select class="custom-select" id="query16" name="query16">
+                          <option selected>Month-to-month</option>
+                          <option>One year</option>
+                          <option>Two year</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="col">
+                       <div class="input-group mb-4">
+                        <div class="input-group-prepend">
+                          <label class="input-group-text" for="inputGroupSelect01">Paperless Billing</label>
+                        </div>
+                        <select class="custom-select" id="query17" name="query17">
+                          <option selected>Yes</option>
+                          <option>No</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col">
+                       <div class="input-group mb-4">
+                        <div class="input-group-prepend">
+                          <label class="input-group-text" for="inputGroupSelect01">PaymentMethod</label>
+                        </div>
+                        <select class="custom-select" id="query18" name="query18">
+                          <option selected>Electronic check</option>
+                          <option >Mailed check</option>
+                          <option >Credit card (automatic)</option>
+                          <option >Bank transfer (automatic)</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="col">
+                       <div class="input-group mb-4">
+                        <div class="input-group-prepend">
+                          <label class="input-group-text" for="inputGroupSelect01">Monthly Charges</label>
+                        </div>
+                        <input type="number" step="any" style="width: 90px;" class="custom-select" id="query2" name="query2">
+                      </div>
+                    </div>
+
+                    <div class="col">
+                       <div class="input-group mb-4">
+                        <div class="input-group-prepend">
+                          <label class="input-group-text" for="inputGroupSelect01">Total Charges</label>
+                        </div>
+                        <input type="number" step="any" style="width: 90px;" class="custom-select" id="query3" name="query3">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row"> 
+                    <div class="col-sm-9">
+
+                      <div class="input-group-prepend">
+                        <label class="input-group-text" for="inputGroupSelect01">Result</label>
+                      </div>
+                    <textarea class="form-control" rows="2" id="comment" name="output1" rows="2" cols="5" autofocus>{{output1}}</textarea>
+
+                    <div class="input-group-prepend">
+                      <label class="input-group-text" for="inputGroupSelect01">Certainty</label>
+                    </div>
+                    <textarea class="form-control" rows="2" id="precision" name="output2" rows="2" cols="5" autofocus>{{output2}}</textarea>
+                    </div>
+                  </div>
+                  <br>
+                  <button type="submit" class="btn btn-dark" id="predict-button" >Predict</button>
+
+                </form>
+
+              </div>
+            </div>        
+    
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+  </div>
+
+  <div class="">
+
+<div style="overflow-x: auto;">
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Customer ID</th>
+      <th>Gender</th>
+      <th>Senior Citizen</th>
+      <th>Partner</th>
+      <th>Dependents</th>
+      <th>Tenure</th>
+      <th>Phone Service</th>
+      <th>Multiple Lines</th>
+      <th>Internet Service</th>
+      <th>Online Security</th>
+      <th>Online Backup</th>
+      <th>Device Protection</th>
+      <th>Tech Support</th>
+      <th>Streaming TV</th>
+      <th>Streaming Movies</th>
+      <th>Contract</th>
+      <th>Paperless Billing</th>
+      <th>Payment Method</th>
+      <th>Monthly Charges</th>
+      <th>Total Charges</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for index, row in data_rows.iterrows %}
+      <tr>
+        <td>{{ row.customerID }}</td>
+        <td>{{ row.gender }}</td>
+        <td>{{ row.SeniorCitizen }}</td>
+        <td>{{ row.Partner }}</td>
+        <td>{{ row.Dependents }}</td>
+        <td>{{ row.tenure }}</td>
+        <td>{{ row.PhoneService }}</td>
+        <td>{{ row.MultipleLines }}</td>
+        <td>{{ row.Internetservice }}</td>
+        <td>{{ row.OnlineSecurity }}</td>
+        <td>{{ row.OnlineBackup }}</td>
+        <td>{{ row.DeviceProtection }}</td>
+        <td>{{ row.TechSupport }}</td>
+        <td>{{ row.StreamingTV }}</td>
+        <td>{{ row.StreamingMovies }}</td>
+        <td>{{ row.Contract }}</td>
+        <td>{{ row.PaperlessBilling }}</td>
+        <td>{{ row.PaymentMethod }}</td>
+        <td>{{ row.MonthlyCharges }}</td>
+        <td>{{ row.TotalCharges }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+
+
+      </main>
+      <!-- End Main -->
+
+    </div>
+
+    <!-- Scripts -->
+    <!-- Custom JS -->
+    <script src="../static/scripts.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      // Prevent form submission and handle it using AJAX
+      $(document).ready(function () {
+          $('#prediction-form').submit(function (event) {
+              event.preventDefault(); // Prevent form from being submitted
+  
+              // Serialize form data
+              var formData = $(this).serialize();
+  
+              // Send AJAX request
+              $.ajax({
+                  url: "{% url 'data' %}",
+                  type: "POST",
+                  data: formData,
+                  success: function (response) {
+                      // Handle the response (e.g., update result fields)
+                      $('#comment').val(response.output1);
+                      $('#precision').val(response.output2);
+                  },
+                  error: function (xhr, errmsg, err) {
+                      // Handle the error (e.g., display error message)
+                      console.log(xhr.status + ": " + xhr.responseText);
+                  }
+              });
+          });
+  
+          // Reset form and result fields when the modal is closed
+          $('#prediction-modal').on('hidden.bs.modal', function () {
+              $('#prediction-form')[0].reset();
+              $('#comment').val('');
+              $('#precision').val('');
+          });
+      });
+  </script>
+  <script>
+    function showConfirmationPopup(event) {
+      event.preventDefault();
+      document.getElementById('confirmationPopup').style.display = 'block';
+    }
+  
+    function closeConfirmationPopup() {
+      document.getElementById('confirmationPopup').style.display = 'none';
+    }
+  
+    function redirectToSupport() {
+      window.location.href = 'https://inwi.ma/faq'; // Replace with your desired support site URL
+    }
+  </script>
+  
+  
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  </body>
+</html>
